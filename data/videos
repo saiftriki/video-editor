@@ -1,9 +1,13 @@
 [
   {
     "id": 0,
-    "videoId": "3caeeec4",
+    "videoId": "2a736178",
     "name": "Ocean Is Calling",
-    "extention": "mp4",
+    "extension": "mp4",
+    "dimensions": {
+      "width": 720,
+      "height": 1280
+    },
     "userId": 3,
     "extractedAudio": false,
     "resizes": {}
