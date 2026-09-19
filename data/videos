@@ -1,15 +1,1 @@
-[
-  {
-    "id": 0,
-    "videoId": "2a736178",
-    "name": "Ocean Is Calling",
-    "extension": "mp4",
-    "dimensions": {
-      "width": 720,
-      "height": 1280
-    },
-    "userId": 3,
-    "extractedAudio": false,
-    "resizes": {}
-  }
-]
+[{"id":0,"videoId":"2a736178","name":"Ocean Is Calling","extension":"mp4","dimensions":{"width":720,"height":1280},"userId":3,"extractedAudio":false,"resizes":{}}]
