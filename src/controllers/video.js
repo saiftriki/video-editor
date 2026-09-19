@@ -17,6 +17,7 @@ const getVideos = (req, res, handleErr) => {
   res.status(200).json(videos);
 };
 
+// Upload a video file
 const uploadVideo = async (req, res, handleErr) => {
   const specifiedFileName = req.headers.filename;
   const extension = path.extname(specifiedFileName).substring(1).toLowerCase();
@@ -70,9 +71,10 @@ const uploadVideo = async (req, res, handleErr) => {
   }
 };
 
+// Return a video asset to the client
 const getVideoAsset = async (req, res, handleErr) => {
   const videoId = req.params.get("videoId");
-  const type = req.params.get("type");
+  const type = req.params.get("type"); // thumbnail, original, audio, resize
 
   DB.update();
   const video = DB.videos.find((video) => video.videoId === videoId);
@@ -85,6 +87,7 @@ const getVideoAsset = async (req, res, handleErr) => {
   }
   let file;
   let mimeType;
+  let filename; // the final file name for the download (including the extension)
 
   switch (type) {
     case "thumbnail":
@@ -93,8 +96,32 @@ const getVideoAsset = async (req, res, handleErr) => {
       break;
 
     // audio
+    case "audio":
+      file = await fs.open(`./storage/${videoId}/audio.aac`, "r");
+      mimeType = "audio/aac";
+      filename = `${video.name}-audio.aac`;
+      break;
+
     // resize
-    // original
+    case "resize":
+      const dimensions = req.params.get("dimensions");
+
+      file = await fs.open(
+        `./storage/${videoId}/${dimensions}.${video.extension}`,
+        "r",
+      );
+      mimeType = "video/mp4"; // allways mp4 for simplicity
+      filename = `${video.name}-${dimensions}.${video.extension}`;
+      break;
+
+    case "original":
+      file = await fs.open(
+        `./storage/${videoId}/original.${video.extension}`,
+        "r",
+      );
+      mimeType = "video/mp4"; // allways mp4 for simplicity
+      filename = `${video.name}.${video.extension}`;
+      break;
   }
 
   try {
@@ -102,6 +129,14 @@ const getVideoAsset = async (req, res, handleErr) => {
     const stat = await file.stat();
 
     const fileStream = file.createReadStream();
+
+    if (type !== "thumbnail") {
+      // Set a header to prompt for download
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename=myapp-${filename}`,
+      );
+    }
 
     // Set the Content-Type header based on the file type
     res.setHeader("Content-Type", mimeType);
