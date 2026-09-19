@@ -32,6 +32,9 @@ module.exports = (server) => {
   // Extract the audio for a video file (can only be done once per video)
   server.route("patch", "/api/video/extract-audio", Video.extractAudio);
 
+  // Resise a video file (creates a new video file)
+  server.route("put", "/api/video/resize", Video.resizeVideo);
+
   // Return a video asset to the client
   server.route("get", "/get-video-asset", Video.getVideoAsset);
 };
